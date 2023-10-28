@@ -9,10 +9,14 @@ function App() {
   const [count, setCount] = useState(1)
   const [isLoading, setIsLoading] = useState(false);
 
-
+  useEffect(() => {
+    fetchAPI(true);
+  }, []);
 
   const fetchAPI = async (action) => {
     setIsLoading(true);
+
+
     if (action === true) {
       const response = await axios.get('https://api.unsplash.com/search/photos?page=1&query=' + query + '&client_id=cZ-ON-lBWk7c3j1Z3DK29lv5qBf3-8KO7nWwe0uDXss')
       const data = await response.data
@@ -29,6 +33,8 @@ function App() {
 
     setIsLoading(false);
   }
+
+
   const a = images.map((image) =>
     <img className="haha" src={image.urls.small} />
   )
@@ -39,17 +45,20 @@ function App() {
         <input value={query} onChange={(e) => setQuery(e.target.value)} className="form-control me-2 w-25" type="search" placeholder="Search" aria-label="Search" />
         <button onClick={() => fetchAPI(true)} className="btn btn-outline-success " type="submit">Search</button>
       </div>
-      {isLoading && <div class="loader">Loading...</div>}
+      {isLoading && <div class="loader">Loading...</div>
+      }
       <InfiniteScroll
         dataLength={images.length}
         next={() => fetchAPI(false)}
         hasMore={true}
+        loader={<div class="loader">Loading...</div>}
+
       >
         <div className="photos">
           {a}
         </div>
-      </InfiniteScroll>
 
+      </InfiniteScroll>
     </div>
   );
 }
